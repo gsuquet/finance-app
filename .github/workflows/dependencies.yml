@@ -1,0 +1,30 @@
+name: Dependency Scanning
+on:
+  workflow_call:
+    inputs:
+      severity:
+        description: Severity to fail on
+        required: false
+        type: string
+        default: high
+      comment:
+        description: Comment on PR
+        required: false
+        type: string
+        default: on-failure
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v3
+      with:
+        fail-on-severity: ${{ inputs.severity }}
+        comment-summary-in-pr: ${{ inputs.comment }}
